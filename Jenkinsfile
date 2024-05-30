@@ -9,7 +9,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    sh 'docker-compose -f docker-compose.yml build'
+                    sh 'docker compose -f docker-compose.yml build'
                 }
             }
         }
@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                        sh 'docker-compose -f docker-compose.yml push'
+                        sh 'docker compose -f docker-compose.yml push'
                     }
                 }
             }
@@ -34,8 +34,8 @@ pipeline {
                                     removePrefix: '',
                                     execCommand: '''
                                         cd /remote/deployment/directory
-                                        docker-compose down
-                                        docker-compose up -d
+                                        docker compose down
+                                        docker compose up -d
                                     '''
                                 )
                             ]
