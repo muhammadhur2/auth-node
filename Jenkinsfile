@@ -9,7 +9,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    sh 'docker compose -f docker-compose.yml build'
+                    sh 'docker compose -f docker-compose.yaml build'
                 }
             }
         }
@@ -30,7 +30,7 @@ pipeline {
                             configName: "khabib",
                             transfers: [
                                 sshTransfer(
-                                    sourceFiles: 'docker-compose.yml',
+                                    sourceFiles: 'docker-compose.yaml',
                                     removePrefix: '',
                                     execCommand: '''
                                         cd /remote/deployment/directory
