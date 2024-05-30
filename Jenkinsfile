@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                        sh 'docker compose -f docker-compose.yml push'
+                        sh 'docker compose -f docker-compose.yaml push'
                     }
                 }
             }
