@@ -2,6 +2,7 @@ version: '3'
 services:
   server:
     build: ./server
+    image: muhammadhur/test-khabib-server:latest  # This tags the built image
     ports:
       - "3001:3001"
     depends_on:
@@ -18,6 +19,7 @@ services:
       - MONGO_INITDB_DATABASE=mydatabase
   client:
     build: ./client
+    image: muhammadhur/test-khabib-client:latest  # This tags the built image
     ports:
       - "3000:3000"
 
