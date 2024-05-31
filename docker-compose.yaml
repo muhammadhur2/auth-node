@@ -7,9 +7,8 @@ services:
       - "3001:3001"
     depends_on:
       - mongo
-    environment:
-      - MONGO_URI=mongodb://mongo:27017/mydatabase
-      - SECRET=secret123
+    networks:
+      - web-network
   mongo:
     image: mongo:latest
     ports:
@@ -18,11 +17,19 @@ services:
       - mongo_db:/data/db
     environment:
       - MONGO_INITDB_DATABASE=mydatabase
+    networks:
+      - web-network
   client:
     build: ./client
     image: muhammadhur/test-khabib-client:latest
     ports:
       - "3000:3000"
+    networks:
+      - web-network
+
+networks:
+  web-network:
+    driver: bridge
 
 volumes:
   mongo_db:
