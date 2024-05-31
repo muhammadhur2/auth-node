@@ -11,11 +11,7 @@ pipeline {
             steps {
                 echo 'Building Docker images...'
                 script {
-                    sh '''
-                    docker compose -f docker-compose.yaml build
-                    docker tag muhammadhur/test-khabib-server:latest $DOCKERHUB_USER/test-khabib-server:latest
-                    docker tag muhammadhur/test-khabib-client:latest $DOCKERHUB_USER/test-khabib-client:latest
-                    '''
+                    sh 'docker-compose -f docker-compose.yaml build'
                 }
             }
         }
@@ -24,11 +20,9 @@ pipeline {
                 echo 'Pushing Docker images to DockerHub...'
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                        sh '''
-                        echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
-                        docker push $DOCKERHUB_USER/test-khabib-server:latest
-                        docker push $DOCKERHUB_USER/test-khabib-client:latest
-                        '''
+                        sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
+                        sh 'docker push muhammadhur/test-khabib-server:latest'
+                        sh 'docker push muhammadhur/test-khabib-client:latest'
                     }
                 }
             }
@@ -47,9 +41,9 @@ pipeline {
                                     execCommand: '''
                                         set -x # Enable shell command echoing
                                         cd /root/jenkinstest
-                                        docker compose pull
-                                        docker compose down
-                                        docker compose up -d
+                                        docker-compose pull
+                                        docker-compose down
+                                        docker-compose up -d
                                     '''
                                 )
                             ]
