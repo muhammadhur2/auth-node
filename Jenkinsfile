@@ -38,7 +38,7 @@ pipeline {
                                     removePrefix: '',
                                     execCommand: '''
                                         set -x # Enable shell command echoing
-                                        cd /root/jenkinstest
+                                        docker compose pull
                                         docker compose down
                                         docker compose up -d
                                     '''
