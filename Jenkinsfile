@@ -36,7 +36,6 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: 'docker-compose.yaml',
                                     removePrefix: '',
-                                    remoteDirectory: '/root/jenkinstest',
                                     execCommand: '''
                                         set -x # Enable shell command echoing
                                         cd /root/jenkinstest
