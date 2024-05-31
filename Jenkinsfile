@@ -32,13 +32,15 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: 'docker-compose.yaml',
                                     removePrefix: '',
+                                    remoteDirectory: '~/jenkinstest',
                                     execCommand: '''
-                                        cd /remote/deployment/directory
+                                        cd ~/jenkinstest
                                         docker compose down
                                         docker compose up -d
                                     '''
                                 )
-                            ]
+                            ],
+                            verbose: true // Add verbose logging for debugging
                         )
                     ])
                 }
