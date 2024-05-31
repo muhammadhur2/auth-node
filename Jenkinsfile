@@ -3,11 +3,13 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
+                echo 'Checking out source code from SCM...'
                 git branch: 'main', credentialsId: 'github', url: 'https://github.com/muhammadhur2/docker-react-node-auth.git'
             }
         }
         stage('Build Docker Images') {
             steps {
+                echo 'Building Docker images...'
                 script {
                     sh 'docker compose -f docker-compose.yaml build'
                 }
@@ -15,6 +17,7 @@ pipeline {
         }
         stage('Push to DockerHub') {
             steps {
+                echo 'Pushing Docker images to DockerHub...'
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                         sh 'docker compose -f docker-compose.yaml push'
@@ -24,6 +27,7 @@ pipeline {
         }
         stage('Deploy using Docker Compose') {
             steps {
+                echo 'Deploying using Docker Compose...'
                 script {
                     sshPublisher(publishers: [
                         sshPublisherDesc(
@@ -32,15 +36,15 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: 'docker-compose.yaml',
                                     removePrefix: '',
-                                    remoteDirectory: '~/jenkinstest',
+                                    remoteDirectory: '/root/jenkinstest',
                                     execCommand: '''
-                                        cd ~/jenkinstest
+                                        set -x # Enable shell command echoing
+                                        cd /root/jenkinstest
                                         docker compose down
                                         docker compose up -d
                                     '''
                                 )
-                            ],
-                            verbose: true // Add verbose logging for debugging
+                            ]
                         )
                     ])
                 }
@@ -48,6 +52,7 @@ pipeline {
         }
         stage('Purge Docker Images') {
             steps {
+                echo 'Purging Docker images...'
                 script {
                     def imageNames = sh(script: 'docker images -q', returnStdout: true).trim().split('\n')
                     for (image in imageNames) {
