@@ -11,11 +11,10 @@ pipeline {
             steps {
                 echo 'Building Docker images...'
                 script {
-                    // Tagging images correctly as per DockerHub username/repository
                     sh '''
                     docker compose -f docker-compose.yaml build
-                    docker tag yourservice_server:latest $DOCKERHUB_USER/test-khabib-server:latest
-                    docker tag yourservice_client:latest $DOCKERHUB_USER/test-khabib-client:latest
+                    docker tag muhammadhur/test-khabib-server:latest $DOCKERHUB_USER/test-khabib-server:latest
+                    docker tag muhammadhur/test-khabib-client:latest $DOCKERHUB_USER/test-khabib-client:latest
                     '''
                 }
             }
@@ -25,10 +24,10 @@ pipeline {
                 echo 'Pushing Docker images to DockerHub...'
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                        // Logging into DockerHub before pushing
                         sh '''
                         echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
-                        docker compose -f docker-compose.yaml push
+                        docker push $DOCKERHUB_USER/test-khabib-server:latest
+                        docker push $DOCKERHUB_USER/test-khabib-client:latest
                         '''
                     }
                 }
@@ -45,10 +44,10 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: 'docker-compose.yaml',
                                     removePrefix: '',
-                                    remoteDirectory: '/root/jenkinstest',
                                     execCommand: '''
                                         set -x # Enable shell command echoing
                                         cd /root/jenkinstest
+                                        docker compose pull
                                         docker compose down
                                         docker compose up -d
                                     '''
