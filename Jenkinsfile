@@ -41,6 +41,8 @@ pipeline {
                                     execCommand: '''
                                         set -x # Enable shell command echoing
                                         cd /root/jenkinstest
+                                        docker network create web-network || true
+                                        docker login -u $DOCKERHUB_USER --password-stdin <<< $DOCKERHUB_PASS
                                         docker compose pull
                                         docker compose down
                                         sudo docker compose up -d
