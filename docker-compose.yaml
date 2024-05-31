@@ -2,13 +2,14 @@ version: '3'
 services:
   server:
     build: ./server
-    image: muhammadhur/test-khabib-server:latest  # This tags the built image
+    image: muhammadhur/test-khabib-server:latest
     ports:
       - "3001:3001"
     depends_on:
       - mongo
-    env_file:
-      - ./server/.env.docker
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mydatabase
+      - SECRET=secret123
   mongo:
     image: mongo:latest
     ports:
@@ -19,7 +20,7 @@ services:
       - MONGO_INITDB_DATABASE=mydatabase
   client:
     build: ./client
-    image: muhammadhur/test-khabib-client:latest  # This tags the built image
+    image: muhammadhur/test-khabib-client:latest
     ports:
       - "3000:3000"
 
