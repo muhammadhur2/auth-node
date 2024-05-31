@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo 'Building Docker images...'
                 script {
-                    sh 'docker-compose -f docker-compose.yaml build'
+                    sh 'docker compose -f docker-compose.yaml build'
                 }
             }
         }
@@ -41,9 +41,9 @@ pipeline {
                                     execCommand: '''
                                         set -x # Enable shell command echoing
                                         cd /root/jenkinstest
-                                        docker-compose pull
-                                        docker-compose down
-                                        docker-compose up -d
+                                        docker compose pull
+                                        docker compose down
+                                        docker compose up -d
                                     '''
                                 )
                             ]
